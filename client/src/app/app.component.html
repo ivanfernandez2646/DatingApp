@@ -1,0 +1,6 @@
+<div class="container">
+    <h1 style="color: red;">{{title}}</h1>
+    <ul>
+        <li *ngFor='let team of teams'>{{team.id}} - {{team.userName | titlecase}}</li>
+    </ul>
+</div>
