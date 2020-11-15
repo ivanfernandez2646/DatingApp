@@ -1,45 +1,32 @@
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseApiController
     {
-        private readonly DataContext _context;
-        public UsersController(DataContext context)
+        public UsersController(DataContext context) : base(context)
         {
-            _context = context;
         }
-
+        
+        [AllowAnonymousAttribute]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers(){
+        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+        {
             return await _context.Users.ToListAsync();
         }
 
+        [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<AppUser>> GetUser(int id){
+        public async Task<ActionResult<AppUser>> GetUser(int id)
+        {
             return await _context.Users.FindAsync(id);
         }
-
-        /*[HttpPost("{name}")]
-        public bool InsertUser(string name){
-            int maxId = _context.Users.Max(user => user.Id);
-
-            var appUser = _context.Add(new AppUser{
-                Id = maxId + 1,
-                UserName = name
-            });
-            _context.SaveChanges();
-
-            return appUser != null ? true : false;
-        }*/
     }
 }
