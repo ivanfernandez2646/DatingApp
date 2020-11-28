@@ -48,7 +48,7 @@ namespace API.Controllers
             AppUser userEntity = await _context.Users.FirstOrDefaultAsync(user => user.UserName == loginUser.UserName.ToLower());
 
             if (userEntity == null)
-                return Unauthorized("User not exists!!");
+                return Unauthorized("User doesn't exist!!");
 
             using var hmac = new HMACSHA512(userEntity.PasswordSalt);
 

@@ -1,21 +1,23 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-secondary">
   <div class="container">
-    <a class="navbar-brand" href="#">Dating App</a>
+    <a class="navbar-brand" routerLink="/" routerLinkActive="active">Dating App</a>
 
-    <ul class="navbar-nav mr-auto" *ngIf="isLogged">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Matches</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Lists</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Messages</a>
-      </li>
+    <ul class="navbar-nav mr-auto">
+      <ng-container *ngIf="(this.accountService.currentUser$ | async)">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/members" routerLinkActive="active">Matches</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/lists" routerLinkActive="active">Lists</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/messages" routerLinkActive="active">Messages</a>
+        </li>
+      </ng-container>
     </ul>
     
-    <div class="dropdown" *ngIf="isLogged" dropdown>
-      <a class="dropdown-toggle text-light" dropdownToggle>Welcome {{userLogged.userName}}</a>
+    <div class="dropdown" *ngIf="this.accountService.currentUser$ | async as currentUser" dropdown>
+      <a class="dropdown-toggle text-light" dropdownToggle>Welcome {{currentUser.userName | titlecase}}</a>
       <div class="dropdown-menu" *dropdownMenu>
         <a class="dropdown-item">Edit</a>
         <div class="dropdown-divider"></div>
@@ -23,7 +25,8 @@
       </div>
     </div>
 
-    <form #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()" autocomplete="off" *ngIf="!isLogged">
+    <form #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()" autocomplete="off" 
+      *ngIf="(this.accountService.currentUser$ | async) === null">
       <input
           name="username"
           [(ngModel)]="model.username" 
@@ -38,7 +41,7 @@
         type="password" 
         placeholder="Password" 
         aria-label="Password">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
+      <button class="btn btn-primary my-2 my-sm-0" type="submit">Login</button>
     </form>
   </div>
 </nav>

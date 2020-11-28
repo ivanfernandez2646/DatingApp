@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { RegisterUser } from '../_models/register-user';
 import { AccountService } from '../_services/account.service';
 
@@ -12,7 +13,7 @@ export class RegisterComponent implements OnInit {
   @Output() closeRegisterEvent = new EventEmitter();
   userToRegisterForm: any = {};
 
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
   }
@@ -21,16 +22,20 @@ export class RegisterComponent implements OnInit {
     if(this.isValidPassword()){
       const userToRegister: RegisterUser = 
       {
-        username:this.userToRegisterForm.username, 
+        userName:this.userToRegisterForm.username, 
         password:this.userToRegisterForm.password
       };
 
       this.accountService.registerUser(userToRegister).subscribe((res) => {
+        this.toastr.success("Register successful");
         this.cancel();
       }, error => {
+        this.toastr.error(error.error);
         console.log(error);
       });
-    } 
+    }else{
+      this.toastr.error("Passwords don't match");
+    }
   }
 
   cancel(){

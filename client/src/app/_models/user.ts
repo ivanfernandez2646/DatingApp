@@ -1,6 +1,6 @@
 import { tokenName } from '@angular/compiler';
 
 export interface User{
-    username: string;
+    userName: string;
     token: string;
 }
