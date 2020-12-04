@@ -1,0 +1,20 @@
+<ng-container *ngIf="!this.error">
+    <h4>{{this.errorStringToTemplate}}</h4>
+</ng-container>
+<ng-container *ngIf="this.error">
+    <h4>{{this.error.statusCode + this.errorStringToTemplate}}</h4>
+    <h5 class="text-danger">Error: {{error.message}}</h5>
+    <p class="font-weight-bold">
+        Note: If you are seeing this then Angular is probably not to blame
+    </p>
+    <p>What to do next?</p>
+    <ol>
+        <li>Open the chrome dev tools</li>
+        <li>Inspect the network tab</li>
+        <li>Check the failing request</li>
+        <li>Examinte the request URL - make sure it is correct</li>
+    </ol>
+    <code>
+        {{error.details}}
+    </code>
+</ng-container>

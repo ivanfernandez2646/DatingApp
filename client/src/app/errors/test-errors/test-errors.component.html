@@ -1,0 +1,13 @@
+<ng-container>
+    <button type="button" class="btn btn-primary mr-2" (click)="get400BadRequest()">400 Bad Request</button>
+    <button type="button" class="btn btn-primary mr-2" (click)="get401Unauthorized()">401 Unauthorized</button>
+    <button type="button" class="btn btn-primary mr-2" (click)="get404NotFound()">404 Not Found</button>
+    <button type="button" class="btn btn-primary mr-2" (click)="get500ServerError()">500 Server Error</button>
+    <button type="button" class="btn btn-primary mr-2" (click)="get400BadRequestValidation()">400 Bad Request (Validation)</button>
+</ng-container>
+
+<div class="container mt-5">
+    <ul>
+        <li *ngFor="let validationError of this.validationErrors" class="text-secondary">{{validationError}}</li>
+    </ul>
+</div>
