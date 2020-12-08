@@ -10,7 +10,7 @@ namespace API.Controllers
     {
         protected readonly DataContext _context;
 
-        public BaseApiController(DataContext context)
+        public BaseApiController(DataContext context = null)
         {
             _context = context;
         }
