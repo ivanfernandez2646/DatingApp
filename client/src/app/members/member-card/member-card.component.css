@@ -1,0 +1,30 @@
+.card-img-top:hover{
+    transform: scale(1.2, 1.2);
+    transition-duration: 0.5s;
+}
+
+.card-img-top{
+    transform: scale(1, 1);
+    transition-duration: 0.5s;
+}
+
+.card-img-wrapper{
+    overflow: hidden;
+    position: relative;
+}
+
+.member-icons{
+    position: absolute;
+    bottom: -100px;
+    left: 0;
+    right: 0;
+    margin-right: auto;
+    margin-left: auto;
+    transition: bottom 0.3s ease-in-out;
+}
+
+.card:hover .member-icons{
+    bottom: 0px;
+    transition: bottom 0.3s ease-in-out;
+}
+
