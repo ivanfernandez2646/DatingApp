@@ -1,3 +1,7 @@
 .dropdown-toggle, .dropdown-menu{
     cursor: pointer;
 }
+
+.dropdown-toggle{
+    text-decoration: none;
+}

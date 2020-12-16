@@ -47,5 +47,21 @@ namespace API.Controllers
 
             return mappedUser;
         }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateUser(MemberUpdateDTO memberUpdateDTO)
+        {
+            var username = User.Claims.FirstOrDefault()?.Value;
+            var userToUpdate = await _userRepository.GetUserByUsernameAsync(username);
+
+            if(userToUpdate != null){
+                var updatedAppUser = _mapper.Map(memberUpdateDTO, userToUpdate);
+                _userRepository.Update(updatedAppUser);
+                if(await _userRepository.SaveAllAsync())
+                    return Ok();
+            }
+
+            return BadRequest("An error with the update user process");
+        }
     }
 }
