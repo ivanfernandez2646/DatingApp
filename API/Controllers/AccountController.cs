@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,7 +46,9 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<LoginRegisterUserOutputDTO>> Login(LoginUserDTO loginUser)
         {
-            AppUser userEntity = await _context.Users.FirstOrDefaultAsync(user => user.UserName == loginUser.UserName.ToLower());
+            AppUser userEntity = await _context.Users
+                .Include(user => user.Photos)
+                .FirstOrDefaultAsync(user => user.UserName == loginUser.UserName.ToLower());
 
             if (userEntity == null)
                 return Unauthorized("User doesn't exist!!");
@@ -61,7 +64,8 @@ namespace API.Controllers
 
             return new LoginRegisterUserOutputDTO{
                 UserName = userEntity.UserName,
-                Token = _tokenService.CreateToken(userEntity)
+                Token = _tokenService.CreateToken(userEntity),
+                PhotoUrl = userEntity.Photos.FirstOrDefault(x => x.IsMain)?.Url,
             };
         }
 

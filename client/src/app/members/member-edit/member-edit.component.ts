@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Member } from 'src/app/_models/member';
+import { AccountService } from 'src/app/_services/account.service';
 import { MemberService } from 'src/app/_services/member.service';
 
 @Component({
@@ -14,12 +15,14 @@ export class MemberEditComponent implements OnInit {
   @ViewChild('editForm') editForm: NgForm;
   @HostListener('window:beforeunload', ['$event'])
     onWindowClose($event){
-      $event.returnValue = false;
+      if(this.editForm.dirty){
+        $event.returnValue = false;
+      }
     }
   member: Member;
 
   constructor(private memberService: MemberService, private route: ActivatedRoute, 
-    private toastr: ToastrService) { }
+    private toastr: ToastrService, public accountService: AccountService) { }
 
   ngOnInit(): void {
     let username = this.route.snapshot.paramMap.get("username");

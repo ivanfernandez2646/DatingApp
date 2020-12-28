@@ -35,4 +35,15 @@ export class MemberService {
   updateMember(member: Member){
     return this.httpClient.put(this.url + "users", member);
   }
+
+  setMainPhoto(photoId: number){
+    return this.httpClient.put(this.url + "users/set-main-photo/" + photoId, {}).pipe(
+      map((res: Member) => {
+        let indexMember = this.members.findIndex(x => x.id == res.id);
+        this.members.splice(indexMember);
+        this.members.push(res);
+        return res;
+      })
+    );
+  }
 }

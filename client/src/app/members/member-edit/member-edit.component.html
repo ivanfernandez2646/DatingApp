@@ -10,9 +10,9 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-4">
+        <div class="col-4" *ngIf="(this.accountService.currentUser$ | async) as user">
             <div class="card">
-                <img src="{{member.photoUrl}}" alt="{{member.knownAs}}" class="card-img-top">
+                <img src="{{user.photoUrl}}" alt="{{user.photoUrl}}" class="card-img-top">
                 <div class="card-body">
                     <div>
                         <strong>Description:</strong>
@@ -60,7 +60,7 @@
                     </form>
                 </tab>
                 <tab heading="Edit photos">
-                    <h4>To implement</h4>
+                    <app-photo-editor [member]="this.member"></app-photo-editor>
                 </tab>
             </tabset>
         </div>
