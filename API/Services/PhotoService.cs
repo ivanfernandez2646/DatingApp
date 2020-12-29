@@ -25,11 +25,6 @@ namespace API.Services
             _cloudinary = new Cloudinary(acc);
         }
 
-        public Task<ImageUploadResult> DeletePhotoFromCloudinary()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public async Task<ImageUploadResult> UploadPhotoToCloudinary(IFormFile img)
         {
             var uploadParams = new ImageUploadParams()
@@ -46,6 +41,12 @@ namespace API.Services
                 uploadParams.File = new FileDescription(img.FileName, memoryStream);
                 return await _cloudinary.UploadAsync(uploadParams);
             }
+        }
+
+        public async Task<DelResResult> DeletePhotoFromCloudinary(string publicPhotoId)
+        {
+            var result = await _cloudinary.DeleteResourcesAsync(ResourceType.Image, new string[] {publicPhotoId});
+            return result;
         }
     }
 }

@@ -5,3 +5,8 @@
 .dropdown-toggle{
     text-decoration: none;
 }
+
+#mainPhoto{
+    width: 50px;
+    height: 50px;
+}

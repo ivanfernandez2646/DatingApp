@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FileItem, FileUploader } from 'ng2-file-upload';
+import { FileUploader } from 'ng2-file-upload';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs/operators';
 import { Member } from 'src/app/_models/member';
+import { Photo } from 'src/app/_models/Photo';
 import { User } from 'src/app/_models/user';
 import { AccountService } from 'src/app/_services/account.service';
 import { MemberService } from 'src/app/_services/member.service';
@@ -47,8 +48,8 @@ export class PhotoEditorComponent implements OnInit {
 
     this.uploader.onSuccessItem = (file, res, status, headers) => {
       if(res){
-        const memberResult = JSON.parse(res);
-        this.member = memberResult;
+        const photoResult = JSON.parse(res);
+        this.member.photos.push(photoResult);
       }
     }
   }
@@ -58,11 +59,21 @@ export class PhotoEditorComponent implements OnInit {
   }
 
   setMainPhoto(photoId: number){
-    this.memberService.setMainPhoto(photoId).subscribe((res: Member) => {
-      this.user.photoUrl = res.photoUrl;
+    this.memberService.setMainPhoto(photoId).subscribe((res: Photo) => {
+      this.user.photoUrl = res.url;
       this.accountService.setCurrentUser(this.user);
-      this.member = res;
+      this.member.photoUrl = res.url;
+      this.member.photos.find(p => p.isMain).isMain = false;
+      this.member.photos.find(p => p.id == photoId).isMain = true;
       this.toastr.success("Main photo has been changed successfully");
     });
+  }
+
+  deletePhoto(photoId: number){
+    this.memberService.deletePhoto(photoId).subscribe(() => {
+        const photo = this.member.photos.findIndex(p => p.id == photoId);
+        this.member.photos.splice(photo, 1);
+        this.toastr.success("Photo has been removed successfully");
+    })
   }
 }

@@ -7,6 +7,6 @@ namespace API.Interfaces
     public interface IPhotoService
     {
         Task<ImageUploadResult> UploadPhotoToCloudinary(IFormFile img);
-        Task<ImageUploadResult> DeletePhotoFromCloudinary();
+        Task<DelResResult> DeletePhotoFromCloudinary(string publicPhotoId);
     }
 }

@@ -2,14 +2,19 @@
     <div class="col-2" *ngFor="let photo of member.photos">
         <img src="{{photo.url}}" alt="{{photo.url}}" class="img-thumbnail p-1">
         <div class="btn-group p-1">
-            <button class="btn btn-sm" [class]="photo.isMain ? 'btn-success' : 'btn-light'" (click)="setMainPhoto(photo.id)">Main</button>
-            <button class="btn btn-sm btn-secondary"><i class="fa fa-trash"></i></button>
+            <button id="mainButton" class="btn btn-sm" 
+                [class]="photo.isMain ? 'btn-success' : 'btn-light'" 
+                (click)="setMainPhoto(photo.id)"
+                [disabled]="photo.isMain">Main</button>
+            <button id="deleteButton" class="btn btn-sm btn-secondary" 
+                (click)="deletePhoto(photo.id)">
+                <i class="fa fa-trash"></i></button>
         </div>
     </div>
 </div>
 
 <!-- ANGULAR FILE UPLOAD -->
-<div class="row mt-4">
+<div class="row mt-5">
  
     <div class="col-md-4">
 
@@ -31,7 +36,7 @@
         <input type="file" ng2FileSelect [uploader]="uploader" />
     </div>
 
-    <div class="col-md-8 queue" style="margin-bottom: 40px">
+    <div class="col-md-8 queue" style="margin-bottom: 40px" *ngIf="uploader.queue.length >= 1">
 
         <h3>Upload queue</h3>
         <p>Queue length: {{ uploader?.queue?.length }}</p>

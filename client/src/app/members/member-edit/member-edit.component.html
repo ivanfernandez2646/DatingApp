@@ -10,9 +10,9 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-4" *ngIf="(this.accountService.currentUser$ | async) as user">
+        <div class="col-4">
             <div class="card">
-                <img src="{{user.photoUrl}}" alt="{{user.photoUrl}}" class="card-img-top">
+                <img src="{{member.photoUrl}}" alt="{{member.photoUrl}}" class="card-img-top">
                 <div class="card-body">
                     <div>
                         <strong>Description:</strong>
