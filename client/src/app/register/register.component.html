@@ -1,10 +1,7 @@
 <div class="p text-center">
     <h2>Sign in</h2>
     <hr/>
-    <div class="mt-4" style="margin: 0 auto; width: 50%;">
-
-        
-
+    <!-- <div class="mt-4" style="margin: 0 auto; width: 50%;">
         <form #registerForm ngNativeValidate>
             <div class="form-group">
                 <label class="lead" for="inputUsername">Username</label>
@@ -53,5 +50,85 @@
                     (click)="cancel()">Cancel</button>
             </div>
         </form>
+    </div> -->
+    <div class="mt-4" style="margin: 0 auto; width: 50%;">
+        <form [formGroup]='registerForm'>
+            <div class="form-group">
+                <label class="lead" for="inputUsername">Username</label>
+                <input 
+                id="inputUsername"
+                formControlName="username"
+                type="text" 
+                class="form-control" 
+                placeholder="Username"
+                required
+                autofocus
+                [class.is-invalid]="registerForm.get('username').touched && registerForm.get('username').invalid">
+                <div class="invalid-feedback text-left" *ngIf="this.registerForm.get('password').getError('required')">
+                    <p>Username is required</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="lead" for="inputPassword">Password</label>
+                <input 
+                    id="inputPassword" 
+                    formControlName="password"
+                    type="password" 
+                    class="form-control" 
+                    placeholder="Password"
+                    required
+                    [class.is-invalid]="registerForm.get('password').touched && registerForm.get('password').invalid">
+                <div class="invalid-feedback text-left" *ngIf="this.registerForm.get('password').getError('required')">
+                    <p>Password is required</p>
+                </div>
+                <div class="invalid-feedback text-left" *ngIf="this.registerForm.get('password').getError('minlength')">
+                    <p>Password must be 4 characters at least</p>
+                </div>
+                <div class="invalid-feedback text-left" *ngIf="this.registerForm.get('password').getError('maxlength')">
+                    <p>Password can be 8 characters at most</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="lead" for="inputPassword">Confirm password</label>
+                <input 
+                    id="inputConfirmPassword"
+                    formControlName="confirmPassword"
+                    type="password" 
+                    class="form-control" 
+                    placeholder="Repeat password"
+                    required
+                    [class.is-invalid]="registerForm.get('confirmPassword').touched && registerForm.get('confirmPassword').invalid">
+                <div class="invalid-feedback text-left" *ngIf="this.registerForm.get('confirmPassword').getError('required')">
+                    <p>Confirm password is required</p>
+                </div>
+                <div class="invalid-feedback text-left" *ngIf="this.registerForm.get('confirmPassword').getError('minlength')">
+                    <p>Confirm password must be 4 characters at least</p>
+                </div>
+                <div class="invalid-feedback text-left" *ngIf="this.registerForm.get('confirmPassword').getError('maxlength')">
+                    <p>Confirm password can be 8 characters at most</p>
+                </div>
+                <div class="invalid-feedback text-left" *ngIf="this.registerForm.get('confirmPassword').getError('matchError')">
+                    <p>Confirm password doesn't match password field</p>
+                </div>
+            </div>
+            <!-- <div class="form-group">
+                <label class="lead">Who is your favourite user??</label>
+                <select class="form-control" name="selectUser" id="selectUser">
+                    <option *ngFor="let user of usersFromHomeComponent">{{user.userName}}</option>
+                </select>
+            </div> -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-secondary btn-lg mr-2" 
+                    [disabled]="this.registerForm.invalid"
+                    (click)="registerUser()">Register</button>
+                <button type="submit" class="btn btn-primary btn-lg" 
+                    (click)="cancel()">Cancel</button>
+            </div>
+        </form>
+        <div class="mt-3">
+            <p>Form value: {{registerForm.value | json}}</p>
+            <p>Form status: {{registerForm.status | json}}</p>
+        </div>
     </div>
 </div>
