@@ -48,8 +48,14 @@ export class PhotoEditorComponent implements OnInit {
 
     this.uploader.onSuccessItem = (file, res, status, headers) => {
       if(res){
-        const photoResult = JSON.parse(res);
+        const photoResult: Photo = JSON.parse(res);
         this.member.photos.push(photoResult);
+
+        if (photoResult.isMain){
+          this.user.photoUrl = photoResult.url;
+          this.accountService.setCurrentUser(this.user);
+          this.member.photoUrl = photoResult.url;
+        }
       }
     }
   }
@@ -59,10 +65,10 @@ export class PhotoEditorComponent implements OnInit {
   }
 
   setMainPhoto(photoId: number){
-    this.memberService.setMainPhoto(photoId).subscribe((res: Photo) => {
-      this.user.photoUrl = res.url;
+    this.memberService.setMainPhoto(photoId).subscribe((photoResult: Photo) => {
+      this.user.photoUrl = photoResult.url;
       this.accountService.setCurrentUser(this.user);
-      this.member.photoUrl = res.url;
+      this.member.photoUrl = photoResult.url;
       this.member.photos.find(p => p.isMain).isMain = false;
       this.member.photos.find(p => p.id == photoId).isMain = true;
       this.toastr.success("Main photo has been changed successfully");

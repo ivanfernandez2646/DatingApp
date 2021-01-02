@@ -1,6 +1,7 @@
 <div class="p text-center">
     <h2>Sign in</h2>
     <hr/>
+    <!-- 1er método: ngModel -->
     <!-- <div class="mt-4" style="margin: 0 auto; width: 50%;">
         <form #registerForm ngNativeValidate>
             <div class="form-group">
@@ -51,7 +52,9 @@
             </div>
         </form>
     </div> -->
-    <div class="mt-4" style="margin: 0 auto; width: 50%;">
+
+    <!-- 2º método: reactive forms boilerplate -->
+    <!-- <div class="mt-4" style="margin: 0 auto; width: 50%;">
         <form [formGroup]='registerForm'>
             <div class="form-group">
                 <label class="lead" for="inputUsername">Username</label>
@@ -112,12 +115,30 @@
                     <p>Confirm password doesn't match password field</p>
                 </div>
             </div>
-            <!-- <div class="form-group">
-                <label class="lead">Who is your favourite user??</label>
-                <select class="form-control" name="selectUser" id="selectUser">
-                    <option *ngFor="let user of usersFromHomeComponent">{{user.userName}}</option>
-                </select>
-            </div> -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-secondary btn-lg mr-2" 
+                    [disabled]="this.registerForm.invalid"
+                    (click)="registerUser()">Register</button>
+                <button type="submit" class="btn btn-primary btn-lg" 
+                    (click)="cancel()">Cancel</button>
+            </div>
+        </form>
+        <div class="mt-3">
+            <p>Form value: {{registerForm.value | json}}</p>
+            <p>Form status: {{registerForm.status | json}}</p>
+        </div>
+    </div> -->
+
+    <!-- 3er método: clean code (ControlValueAccessor) -->
+    <div class="mt-4" style="margin: 0 auto; width: 50%;">
+        <form [formGroup]='registerForm'>
+            <app-text-input [formControl]="registerForm.controls['username']" [label]="'Username'"></app-text-input>
+            <app-text-input [formControl]="registerForm.controls['knownAs']" [label]="'Known as'"></app-text-input>
+            <app-datepicker-input [formControl]="registerForm.controls['dateOfBirth']" [label]="'Date of birth'" [maxDate]="maxDate"></app-datepicker-input>
+            <app-text-input [formControl]="registerForm.controls['city']" [label]="'City'"></app-text-input>
+            <app-text-input [formControl]="registerForm.controls['country']" [label]="'Country'"></app-text-input>
+            <app-text-input [formControl]="registerForm.controls['password']" [label]="'Password'"></app-text-input>
+            <app-text-input [formControl]="registerForm.controls['confirmPassword']" [label]="'Confirm password'"></app-text-input>
             <div class="text-center">
                 <button type="submit" class="btn btn-secondary btn-lg mr-2" 
                     [disabled]="this.registerForm.invalid"

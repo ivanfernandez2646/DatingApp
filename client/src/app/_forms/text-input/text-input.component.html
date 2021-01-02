@@ -1,0 +1,23 @@
+<div class="form-group"> 
+    <label class="lead">{{label}}</label>
+    <input 
+    [formControl]="ngControl.control"
+    type="{{type}}" 
+    class="form-control" 
+    placeholder="{{label}}"
+    required
+    [autofocus]="label == 'Username'"
+    [class.is-invalid]="ngControl.touched && ngControl.invalid">
+    <div class="invalid-feedback text-left" *ngIf="ngControl.errors?.required && ngControl.touched">
+        <p>{{label}} is required</p>
+    </div>
+    <div class="invalid-feedback text-left" *ngIf="ngControl.errors?.minlength && ngControl.touched">
+        <p>{{label}} must be 4 characters at least</p>
+    </div>
+    <div class="invalid-feedback text-left" *ngIf="ngControl.errors?.maxlength && ngControl.touched">
+        <p>{{label}} can be 8 characters at most</p>
+    </div>
+    <div class="invalid-feedback text-left" *ngIf="ngControl.errors?.matchPassword">
+        <p>Confirm password doesn't match password field</p>
+    </div>
+</div>

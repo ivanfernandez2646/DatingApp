@@ -7,6 +7,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,8 +16,11 @@ namespace API.Controllers
     public class AccountController : BaseApiController
     {
         private readonly ITokenService _tokenService;
-        public AccountController(DataContext context, ITokenService tokenService) : base(context)
+        private readonly IMapper _mapper;
+        public AccountController(DataContext context, ITokenService tokenService,
+            IMapper mapper) : base(context)
         {
+            _mapper = mapper;
             _tokenService = tokenService;
         }
 
@@ -27,45 +31,48 @@ namespace API.Controllers
 
             using var hmac = new HMACSHA512();
 
-            AppUser appUser = new AppUser
-            {
-                UserName = registerUser.UserName.ToLower(),
-                PasswordHash = await hmac.ComputeHashAsync(new MemoryStream(Encoding.UTF8.GetBytes(registerUser.Password))),
-                PasswordSalt = hmac.Key
-            };
+            AppUser appUser = _mapper.Map<AppUser>(registerUser);
+
+            appUser.UserName = registerUser.UserName.ToLower();
+            appUser.PasswordHash = await hmac.ComputeHashAsync(new MemoryStream(Encoding.UTF8.GetBytes(registerUser.Password)));
+            appUser.PasswordSalt = hmac.Key;
 
             _context.Add(appUser);
             await _context.SaveChangesAsync();
 
-            return new LoginRegisterUserOutputDTO{
+            return new LoginRegisterUserOutputDTO
+            {
                 UserName = appUser.UserName,
-                Token = _tokenService.CreateToken(appUser)
+                Token = _tokenService.CreateToken(appUser),
+                KnownAs = appUser.KnownAs
             };
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<LoginRegisterUserOutputDTO>> Login(LoginUserDTO loginUser)
         {
-            AppUser userEntity = await _context.Users
+            AppUser appUser = await _context.Users
                 .Include(user => user.Photos)
                 .FirstOrDefaultAsync(user => user.UserName == loginUser.UserName.ToLower());
 
-            if (userEntity == null)
+            if (appUser == null)
                 return Unauthorized("User doesn't exist!!");
 
-            using var hmac = new HMACSHA512(userEntity.PasswordSalt);
+            using var hmac = new HMACSHA512(appUser.PasswordSalt);
 
             byte[] computedHash = await hmac.ComputeHashAsync(new MemoryStream(Encoding.UTF8.GetBytes(loginUser.Password)));
 
             for (int i = 0; i < computedHash.Length; i++)
             {
-                if (computedHash[i] != userEntity.PasswordHash[i]) return Unauthorized("Incorrect password!!");
+                if (computedHash[i] != appUser.PasswordHash[i]) return Unauthorized("Incorrect password!!");
             }
 
-            return new LoginRegisterUserOutputDTO{
-                UserName = userEntity.UserName,
-                Token = _tokenService.CreateToken(userEntity),
-                PhotoUrl = userEntity.Photos.FirstOrDefault(x => x.IsMain)?.Url,
+            return new LoginRegisterUserOutputDTO
+            {
+                UserName = appUser.UserName,
+                Token = _tokenService.CreateToken(appUser),
+                PhotoUrl = appUser.Photos.FirstOrDefault(x => x.IsMain)?.Url,
+                KnownAs = appUser.KnownAs
             };
         }
 

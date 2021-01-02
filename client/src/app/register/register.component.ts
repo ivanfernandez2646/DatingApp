@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { RegisterUser } from '../_models/register-user';
 import { AccountService } from '../_services/account.service';
@@ -15,26 +15,36 @@ export class RegisterComponent implements OnInit {
   //userToRegisterForm: any = {};
 
   registerForm: FormGroup;
+  maxDate: Date;
 
-  constructor(private accountService: AccountService, private toastr: ToastrService) { }
+  constructor(private accountService: AccountService, private toastr: ToastrService,
+    private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.initializeForm();
+    this.maxDate = new Date();
+    this.maxDate.setFullYear(this.maxDate.getFullYear()-18);
   }
 
   initializeForm() {
-    this.registerForm = new FormGroup({
-      username: new FormControl('', Validators.required),
-      password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]),
-      confirmPassword: new FormControl('', [Validators.required, this.arePasswordsTheSame])
-    });
+    this.registerForm = this.fb.group({
+      gender: ['male'],
+      username: ['', Validators.required],
+      knownAs: ['', Validators.required],
+      dateOfBirth: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
+      confirmPassword: ['', [Validators.required]]
+    }, {validator: this.passwordCorrectFromConfirmPasswordField});
   }
 
-  arePasswordsTheSame: ValidatorFn = (control: AbstractControl) => {
-    if(control.value == control.parent?.controls['password']?.value)
+  passwordCorrectFromConfirmPasswordField: ValidatorFn = (fg: FormGroup) => {
+    if(fg.get("password").value == fg.get("confirmPassword").value)
       return null;
-
-    return { matchError: true};
+    
+    fg.get("confirmPassword").setErrors({ matchPassword: true });
+    return;
   }
 
   registerUser() {
@@ -43,14 +53,13 @@ export class RegisterComponent implements OnInit {
     //   userName:this.userToRegisterForm.username, 
     //   password:this.userToRegisterForm.password
     // };
+    // const userToRegister: RegisterUser = 
+    // {
+    //   userName:this.registerForm.get("username").value, 
+    //   password:this.registerForm.get("password").value
+    // };
 
-    const userToRegister: RegisterUser = 
-    {
-      userName:this.registerForm.get("username").value, 
-      password:this.registerForm.get("password").value
-    };
-
-    this.accountService.registerUser(userToRegister).subscribe((res) => {
+    this.accountService.registerUser(this.registerForm.value).subscribe((res) => {
       this.toastr.success("Register successful");
       this.cancel();
     }, error => {
