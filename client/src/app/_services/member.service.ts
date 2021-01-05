@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_models/member';
 import { Photo } from '../_models/Photo';
+import { PaginationHeader, UserParams } from '../_models/pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +14,29 @@ import { Photo } from '../_models/Photo';
 export class MemberService {
   url = environment.apiRoute;
   members: Member[] = [];
+  userParams: UserParams;
 
   constructor(private httpClient: HttpClient) { }
 
-  getMembers(){
-    if(this.members.length > 0) return of(this.members);
-    return this.httpClient.get<Member[]>(this.url + "users").pipe(
+  getMembers(pageNumber?: number, pageSize?: number){
+    let params = new HttpParams();
+    console.log(pageNumber);
+    console.log(pageSize);
+    if(pageNumber !== undefined && pageSize !== undefined){
+      params = params.append('pageNumber', pageNumber.toString());
+      params = params.append('pageSize', pageSize.toString());
+    }
+
+    return this.httpClient.get<Member[]>(this.url + "users", { params: params, observe: 'response' }).pipe(
       map(res => {
-        this.members = res;
-        return res;
+        let pagination: PaginationHeader = JSON.parse(res.headers.get("X-Pagination"));
+        let response = {
+          body: res.body,
+          pagination: pagination
+        }
+        this.members = res.body;
+        console.log(res.body);
+        return response;
       })
     );
   }
