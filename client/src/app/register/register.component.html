@@ -132,13 +132,28 @@
     <!-- 3er método: clean code (ControlValueAccessor) -->
     <div class="mt-4" style="margin: 0 auto; width: 50%;">
         <form [formGroup]='registerForm'>
+            <div class="form-group">
+                <label class="lead mr-4">I'm a</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" formControlName="gender" value="male" checked>
+                    <label class="form-check-label">
+                        Man
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" formControlName="gender" value="female">
+                    <label class="form-check-label">
+                        Woman
+                    </label>
+                </div>
+            </div>
             <app-text-input [formControl]="registerForm.controls['username']" [label]="'Username'"></app-text-input>
             <app-text-input [formControl]="registerForm.controls['knownAs']" [label]="'Known as'"></app-text-input>
             <app-datepicker-input [formControl]="registerForm.controls['dateOfBirth']" [label]="'Date of birth'" [maxDate]="maxDate"></app-datepicker-input>
             <app-text-input [formControl]="registerForm.controls['city']" [label]="'City'"></app-text-input>
             <app-text-input [formControl]="registerForm.controls['country']" [label]="'Country'"></app-text-input>
-            <app-text-input [formControl]="registerForm.controls['password']" [label]="'Password'"></app-text-input>
-            <app-text-input [formControl]="registerForm.controls['confirmPassword']" [label]="'Confirm password'"></app-text-input>
+            <app-text-input [formControl]="registerForm.controls['password']" [label]="'Password'" [type]="'password'"></app-text-input>
+            <app-text-input [formControl]="registerForm.controls['confirmPassword']" [label]="'Confirm password'" [type]="'password'"></app-text-input>
             <div class="text-center">
                 <button type="submit" class="btn btn-secondary btn-lg mr-2" 
                     [disabled]="this.registerForm.invalid"
@@ -147,9 +162,9 @@
                     (click)="cancel()">Cancel</button>
             </div>
         </form>
-        <div class="mt-3">
+        <!-- <div class="mt-3">
             <p>Form value: {{registerForm.value | json}}</p>
             <p>Form status: {{registerForm.status | json}}</p>
-        </div>
+        </div> -->
     </div>
 </div>
