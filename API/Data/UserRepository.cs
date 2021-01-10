@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
@@ -38,8 +40,26 @@ namespace API.Data
         }
 
         public async Task<PagedList<MemberDTO>> GetMembersAsync(UserParams userParams)
-        {
-            var source = _context.Users
+        {   
+            //Omit default user
+            var query = _context.Users
+                .AsQueryable()
+                .Where(u => u.UserName != userParams.CurrentUsername);
+
+            //Filter Age
+            var minimumDate = DateTime.Today.AddYears(-userParams.MaxAge -1);
+            var maximumDate = DateTime.Today.AddYears(-userParams.MinAge);
+
+            query = query
+                .Where(u => u.DateOfBirth.Date >= minimumDate.Date
+                            && u.DateOfBirth.Date <= maximumDate.Date);
+
+            //Filter Gender
+            if (userParams.Gender != null){
+                query = query.Where(u => u.Gender == userParams.Gender);
+            }
+            
+            var source = query
                 .ProjectTo<MemberDTO>(_mapper.ConfigurationProvider)
                 .AsNoTracking();
 

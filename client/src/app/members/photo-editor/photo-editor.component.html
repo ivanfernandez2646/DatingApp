@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-2" *ngFor="let photo of member.photos">
-        <img src="{{photo.url}}" alt="{{photo.url}}" class="img-thumbnail p-1">
+        <img src="{{photo.url || './assets/user.png' }}" alt="{{photo.url}}" class="img-thumbnail p-1">
         <div class="btn-group p-1">
             <button id="mainButton" class="btn btn-sm" 
                 [class]="photo.isMain ? 'btn-success' : 'btn-light'" 

@@ -1,14 +1,43 @@
-<div class="row d-flex justify-content-center">
-    <div *ngFor="let member of members" class="col-3">
-        <app-member-card [member]="member"></app-member-card>
+<ng-container *ngIf="paginationHeader">
+    <div class="row d-flex justify-content-center mt-2">
+        <h2>Your matches - {{paginationHeader.totalCount}} found</h2>
     </div>
-    
-</div>
-<div class="row mt-3" *ngIf="paginationHeader">
-    <div class="col d-flex justify-content-center">
-        <pagination 
-            [totalItems]="paginationHeader.totalCount" 
-            [(ngModel)]="paginationHeader.pageNumber"
-            (pageChanged)="pageChanged($event)"></pagination>
+    <div class="row ml-2 mt-2">
+        <form [formGroup]='filterForm'>
+            <div class="form-inline">
+                <app-number-input [formControl]="filterForm.controls['minAge']" [label]="'Age from:'"
+                    [margin]="'ml-2'" [style]="'width: 6em;'"></app-number-input>
+                <app-number-input [formControl]="filterForm.controls['maxAge']" [label]="'Age to:'"
+                    [margin]="'ml-2'" [style]="'width: 6em;'"></app-number-input>
+                <div class="form-group">
+                    <label class="lead ml-2">Show:</label>
+                    <select formControlName="gender" class="form-control ml-2" [(ngModel)]="userParams.gender">
+                        <option value="both">Both</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="button-group ml-3">
+                    <button type="submit" class="btn btn-secondary mr-2" 
+                        [disabled]="this.filterForm.invalid"
+                        (click)="submitFilter()">Apply filters</button>
+                    <button type="submit" class="btn btn-primary" 
+                        (click)="resetFilter()">Reset filters</button>
+                </div>
+            </div>
+        </form>
     </div>
-</div>
+    <div class="row d-flex justify-content-center mt-4">
+        <div *ngFor="let member of members" class="col-3">
+            <app-member-card [member]="member"></app-member-card>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col d-flex justify-content-center">
+            <pagination 
+                [totalItems]="paginationHeader.totalCount" 
+                [(ngModel)]="paginationHeader.pageNumber"
+                (pageChanged)="pageChanged($event)"></pagination>
+        </div>
+    </div>
+</ng-container>

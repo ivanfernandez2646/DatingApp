@@ -5,7 +5,8 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_models/member';
 import { Photo } from '../_models/Photo';
-import { PaginationHeader, UserParams } from '../_models/pagination';
+import { PaginationHeader } from '../_models/pagination';
+import { UserParams } from '../_models/user-params';
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +19,20 @@ export class MemberService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getMembers(pageNumber?: number, pageSize?: number){
+  getMembers(userParams: UserParams){
     let params = new HttpParams();
-    console.log(pageNumber);
-    console.log(pageSize);
-    if(pageNumber !== undefined && pageSize !== undefined){
-      params = params.append('pageNumber', pageNumber.toString());
-      params = params.append('pageSize', pageSize.toString());
+    
+    if (userParams.pageNumber !== undefined && userParams.pageSize !== undefined){
+      params = params.append('pageNumber', userParams.pageNumber.toString());
+      params = params.append('pageSize', userParams.pageSize.toString());
     }
+
+    params = params.append('currentUsername', userParams.currentUsername.toString());
+    params = params.append('minAge', userParams.minAge.toString());
+    params = params.append('maxAge', userParams.maxAge.toString());
+
+    if (userParams.gender != "both")
+      params = params.append('gender', userParams.gender.toString());
 
     return this.httpClient.get<Member[]>(this.url + "users", { params: params, observe: 'response' }).pipe(
       map(res => {

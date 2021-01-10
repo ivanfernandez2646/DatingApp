@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { Member } from 'src/app/_models/member';
-import { PaginationHeader, UserParams } from 'src/app/_models/pagination';
+import { PaginationHeader } from 'src/app/_models/pagination';
+import { User } from 'src/app/_models/user';
+import { UserParams } from 'src/app/_models/user-params';
+import { AccountService } from 'src/app/_services/account.service';
 import { MemberService } from 'src/app/_services/member.service';
 
 @Component({
@@ -12,27 +17,54 @@ import { MemberService } from 'src/app/_services/member.service';
 export class MemberListComponent implements OnInit {
   members: Member[];
   paginationHeader: PaginationHeader;
+  userParams: UserParams;
+  user: User;
+  filterForm: FormGroup;
 
-  constructor(private memberService: MemberService) { }
+  constructor(private memberService: MemberService, private accountService: AccountService,
+      private fb: FormBuilder) {
+    accountService.currentUser$.pipe(take(1)).subscribe(res => this.user = res);
+  }
 
   ngOnInit(): void {
+    this.userParams = new UserParams(this.user);
+    this.filterForm = this.fb.group({
+      minAge: [this.userParams.minAge, 
+                [Validators.required
+                ,Validators.min(this.userParams.minAge)]],
+      maxAge: [this.userParams.maxAge,
+                [Validators.required
+                ,Validators.max(this.userParams.maxAge)]],
+      gender: [this.userParams.gender, Validators.required]
+    });
     this.loadMembers();
   }
 
   loadMembers() {
-    console.log(this.paginationHeader)
-    this.memberService.getMembers(this.paginationHeader?.pageNumber, this.paginationHeader?.pageSize).subscribe(res => {
+    this.memberService.getMembers(this.userParams).subscribe(res => {
       this.members = res.body;
-      if(this.paginationHeader === undefined){
-        this.paginationHeader = res.pagination;
-      }
+      this.userParams.pageNumber = res.pagination.pageNumber;
+      this.userParams.pageSize = res.pagination.pageSize;
+      this.paginationHeader = res.pagination;
     }, err => {
       console.log(err);
     })
   }
 
   pageChanged(event: any): void {
-    this.paginationHeader.pageNumber = event.page;
+    this.userParams.pageNumber = event.page;
+    this.loadMembers();
+  }
+
+  submitFilter() {
+    this.userParams.minAge = this.filterForm.get("minAge").value;
+    this.userParams.maxAge = this.filterForm.get("maxAge").value;
+    this.userParams.gender = this.filterForm.get("gender").value;
+    this.loadMembers();
+  }
+
+  resetFilter() {
+    this.filterForm.reset(new UserParams(this.user));
     this.loadMembers();
   }
 }

@@ -26,6 +26,7 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { TextInputComponent } from './_forms/text-input/text-input.component';
 import { DatepickerInputComponent } from './_forms/datepicker-input/datepicker-input.component';
+import { NumberInputComponent } from './_forms/number-input/number-input.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { DatepickerInputComponent } from './_forms/datepicker-input/datepicker-i
     MemberEditComponent,
     PhotoEditorComponent,
     TextInputComponent,
-    DatepickerInputComponent
+    DatepickerInputComponent,
+    NumberInputComponent
   ],
   imports: [
     BrowserModule,
