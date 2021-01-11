@@ -7,6 +7,7 @@ export class UserParams{
     maxAge: number = 120;
     gender: string;
     currentUsername: string;
+    orderBy: string = "lastActive";
 
     constructor(user: User){
         //Gender by default is the opposite

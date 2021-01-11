@@ -2,11 +2,11 @@
     <div class="row d-flex justify-content-center mt-2">
         <h2>Your matches - {{paginationHeader.totalCount}} found</h2>
     </div>
-    <div class="row ml-2 mt-2">
-        <form [formGroup]='filterForm'>
+    <div class="row mt-2">
+        <form [formGroup]='filterForm' class="col-9">
             <div class="form-inline">
                 <app-number-input [formControl]="filterForm.controls['minAge']" [label]="'Age from:'"
-                    [margin]="'ml-2'" [style]="'width: 6em;'"></app-number-input>
+                    [style]="'width: 6em;'"></app-number-input>
                 <app-number-input [formControl]="filterForm.controls['maxAge']" [label]="'Age to:'"
                     [margin]="'ml-2'" [style]="'width: 6em;'"></app-number-input>
                 <div class="form-group">
@@ -18,7 +18,7 @@
                     </select>
                 </div>
                 <div class="button-group ml-3">
-                    <button type="submit" class="btn btn-secondary mr-2" 
+                    <button type="submit" class="btn btn-secondary mr-2"
                         [disabled]="this.filterForm.invalid"
                         (click)="submitFilter()">Apply filters</button>
                     <button type="submit" class="btn btn-primary" 
@@ -26,6 +26,16 @@
                 </div>
             </div>
         </form>
+    </div>
+    <div class="row mt-3">
+        <button type="button" class="btn btn-info" style="margin-left: 15px;"
+            [(ngModel)]="userParams.orderBy"
+            btnRadio="lastActive"
+            (click)="loadMembers()">Last Active</button>
+        <button type="button" class="btn btn-info ml-2"
+            [(ngModel)]="userParams.orderBy"
+            btnRadio="created"
+            (click)="loadMembers()">Newest members</button>
     </div>
     <div class="row d-flex justify-content-center mt-4">
         <div *ngFor="let member of members" class="col-3">

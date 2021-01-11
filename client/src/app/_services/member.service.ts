@@ -30,6 +30,7 @@ export class MemberService {
     params = params.append('currentUsername', userParams.currentUsername.toString());
     params = params.append('minAge', userParams.minAge.toString());
     params = params.append('maxAge', userParams.maxAge.toString());
+    params = params.append('orderBy', userParams.orderBy.toString());
 
     if (userParams.gender != "both")
       params = params.append('gender', userParams.gender.toString());
@@ -42,7 +43,6 @@ export class MemberService {
           pagination: pagination
         }
         this.members = res.body;
-        console.log(res.body);
         return response;
       })
     );
