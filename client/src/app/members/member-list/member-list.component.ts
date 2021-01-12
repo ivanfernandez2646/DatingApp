@@ -21,13 +21,13 @@ export class MemberListComponent implements OnInit {
   user: User;
   filterForm: FormGroup;
 
-  constructor(private memberService: MemberService, private accountService: AccountService,
+  constructor(private memberService: MemberService,
       private fb: FormBuilder) {
-    accountService.currentUser$.pipe(take(1)).subscribe(res => this.user = res);
+
   }
 
   ngOnInit(): void {
-    this.userParams = new UserParams(this.user);
+    this.userParams = this.memberService.getUserParams();
     this.filterForm = this.fb.group({
       minAge: [this.userParams.minAge, 
                 [Validators.required
@@ -41,6 +41,7 @@ export class MemberListComponent implements OnInit {
   }
 
   loadMembers() {
+    this.memberService.setUserParams(this.userParams);
     this.memberService.getMembers(this.userParams).subscribe(res => {
       this.members = res.body;
       this.userParams.pageNumber = res.pagination.pageNumber;
@@ -64,7 +65,9 @@ export class MemberListComponent implements OnInit {
   }
 
   resetFilter() {
-    this.filterForm.reset(new UserParams(this.user));
+    this.memberService.resetUserParams();
+    this.userParams = this.memberService.getUserParams();
+    this.filterForm.reset(this.userParams);
     this.loadMembers();
   }
 }

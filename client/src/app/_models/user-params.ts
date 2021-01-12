@@ -1,8 +1,8 @@
 import { User } from "./user";
 
 export class UserParams{
-    pageNumber: number;
-    pageSize: number;
+    pageNumber: number = 1;
+    pageSize: number = 10;
     minAge: number = 18;
     maxAge: number = 120;
     gender: string;

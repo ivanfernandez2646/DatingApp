@@ -24,11 +24,11 @@
                     </div>
                     <div>
                         <strong>Last active:</strong>
-                        <p class="card-text">{{member.lastActive}}</p>
+                        <p class="card-text">{{member.lastActive | date:'d LLL yyyy'}}</p>
                     </div>
                     <div>
                         <strong>Member since:</strong>
-                        <p class="card-text">{{member.created}}</p>
+                        <p class="card-text">{{member.created | date:'d LLL yyyy'}}</p>
                     </div>
                 </div>
                 <div class="card-footer">

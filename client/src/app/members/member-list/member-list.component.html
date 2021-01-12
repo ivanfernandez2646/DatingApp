@@ -11,7 +11,7 @@
                     [margin]="'ml-2'" [style]="'width: 6em;'"></app-number-input>
                 <div class="form-group">
                     <label class="lead ml-2">Show:</label>
-                    <select formControlName="gender" class="form-control ml-2" [(ngModel)]="userParams.gender">
+                    <select formControlName="gender" class="form-control ml-2">
                         <option value="both">Both</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
@@ -46,6 +46,7 @@
         <div class="col d-flex justify-content-center">
             <pagination 
                 [totalItems]="paginationHeader.totalCount" 
+                [itemsPerPage]="paginationHeader.pageSize"
                 [(ngModel)]="paginationHeader.pageNumber"
                 (pageChanged)="pageChanged($event)"></pagination>
         </div>
