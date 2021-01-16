@@ -28,3 +28,8 @@
     transition: bottom 0.3s ease-in-out;
 }
 
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+

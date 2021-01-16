@@ -9,6 +9,8 @@ import { PaginatedResult, PaginationHeader } from '../_models/pagination';
 import { UserParams } from '../_models/user-params';
 import { AccountService } from './account.service';
 import { User } from '../_models/user';
+import { LikeParams } from '../_models/like-params';
+import { GenericParams } from '../_models/generic-params';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +33,8 @@ export class MemberService {
       return of(this.cachedResults.get(filterKey));  
     }
     
-    let params = this.getMembersHeaders(userParams);
+    let params = this.getPaginationHeaders(userParams);
+    params = this.getMembersHeaders(params, userParams);
 
     return this.httpClient.get<Member[]>(this.url + "users", { params: params, observe: 'response' }).pipe(
       map(res => {
@@ -74,14 +77,37 @@ export class MemberService {
     return this.httpClient.delete(this.url + "users/delete-photo/" + photoId);
   }
 
-  private getMembersHeaders(userParams: UserParams): HttpParams{
-    let params = new HttpParams();
-    
-    if (userParams.pageNumber !== undefined && userParams.pageSize !== undefined){
-      params = params.append('pageNumber', userParams.pageNumber.toString());
-      params = params.append('pageSize', userParams.pageSize.toString());
-    }
+  addLike(username: string){
+    return this.httpClient.post(this.url + "likes/" + username, {});
+  }
 
+  getUserLikes(likeParams: LikeParams){
+    let params = this.getPaginationHeaders(likeParams);
+    params = params.append('predicate', likeParams.predicate);
+    return this.httpClient.get<Partial<Member[]>>(this.url + "likes", { params: params, observe: 'response'}).pipe(
+      map(res => {
+        let pagination: PaginationHeader = JSON.parse(res.headers.get("X-Pagination"));
+        let paginatedResult: PaginatedResult = {
+          body: res.body,
+          pagination: pagination
+        }
+        return paginatedResult;
+      })
+    );
+  }
+
+  private getPaginationHeaders(genericParams: GenericParams): HttpParams{
+    let params = new HttpParams();
+
+    if (genericParams.pageNumber !== undefined && genericParams.pageSize !== undefined){
+      params = params.append('pageNumber', genericParams.pageNumber.toString());
+      params = params.append('pageSize', genericParams.pageSize.toString());
+    }
+    
+    return params;
+  }
+
+  private getMembersHeaders(params: HttpParams, userParams: UserParams): HttpParams{
     params = params.append('currentUsername', userParams.currentUsername.toString());
     params = params.append('minAge', userParams.minAge.toString());
     params = params.append('maxAge', userParams.maxAge.toString());
@@ -90,13 +116,12 @@ export class MemberService {
     if (userParams.gender != "both")
       params = params.append('gender', userParams.gender.toString());
 
-    return params;
+    return params; 
   }
 
   //Properties getters and setters
   setUserParams(userParams: UserParams){
     this.userParams = userParams;
-    console.log(this.userParams);
   }
 
   getUserParams(): UserParams{

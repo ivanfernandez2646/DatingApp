@@ -32,9 +32,8 @@ namespace API.Controllers
         {
             var users = await _userRepository.GetMembersAsync(userParams);
             Response.AddPaginationHeaders(users.PageNumber, users.TotalPages, users.PageSize, users.TotalCount);
-            var mappedUsers = _mapper.Map<IEnumerable<MemberDTO>>(users);
             
-            return Ok(mappedUsers);
+            return Ok(users);
         }
 
         [HttpGet("{username}")]

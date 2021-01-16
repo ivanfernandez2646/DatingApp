@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { RegisterUser } from '../_models/register-user';
 import { User } from '../_models/user';
+import { MemberService } from './member.service';
 
 @Injectable({
   providedIn: 'root'

@@ -1,5 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using API.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace API.Data
 {
@@ -10,5 +19,24 @@ namespace API.Data
         }
 
         public DbSet<AppUser> Users { get; set; }
+        public DbSet<UserLike> Likes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UserLike>()
+                .HasKey(ul => new {ul.SourceUserId, ul.LikedUserId});
+
+            modelBuilder.Entity<UserLike>()
+                .HasOne(ul => ul.SourceUser)
+                .WithMany(u => u.LikedUsers)
+                .HasForeignKey(ul => ul.SourceUserId);
+
+            modelBuilder.Entity<UserLike>()
+                .HasOne(ul => ul.LikedUser)
+                .WithMany(u => u.LikedByUsers)
+                .HasForeignKey(ul => ul.LikedUserId);
+        }
     }
 }
