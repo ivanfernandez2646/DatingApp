@@ -1,0 +1,57 @@
+.messagesWrap{
+    padding-left: 40px;
+    padding-top: 10px;
+    padding-right: 30px;
+}
+
+.listMessages{
+    opacity: 1;
+}
+
+.message{
+    height: 80px;
+    border-bottom: 1px dashed gray;
+    align-items: center;
+}
+
+.messagePhoto{
+    max-height: 50px;
+}
+
+.dataRead{
+    margin-left: 2px;
+}
+
+/* SCROLLBAR */
+.scrollbar {
+    width: 100%;
+    list-style: none;
+    max-height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 40px;
+    scroll-behavior: smooth;
+}
+    
+.force-overflow {
+    min-height: 450px;
+}
+
+.scrollbar-secondary::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: #F5F5F5;
+    border-radius: 10px; 
+}
+
+.scrollbar-secondary::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5; 
+}
+
+.scrollbar-secondary::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: rgb(170, 102, 204, 0.5); 
+}

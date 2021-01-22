@@ -22,13 +22,11 @@ export class ListsComponent implements OnInit {
   }
 
   getUserLikes(){
-    console.log(this.paginationHeader);
     this.memberService.getUserLikes(this.likeParams).subscribe(res => {
       this.likeMembers = res.body;
       this.likeParams.pageNumber = res.pagination.pageNumber;
       this.likeParams.pageSize = res.pagination.pageSize;
       this.paginationHeader = res.pagination;
-      console.log(res);
     }, error => {
       console.log(error);
     })

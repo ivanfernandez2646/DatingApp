@@ -1,1 +1,69 @@
-<p>messages works!</p>
+<div class="row">
+    <div class="btn-group" 
+        btnRadioGroup
+        [(ngModel)]="messageParams.container" 
+        (click)="loadMessages()">
+        <button class="btn btn-info"
+            btnRadio="unread">
+            <i class="fa fa-envelope"></i>
+            Unread
+        </button>
+        <button class="btn btn-info" 
+            btnRadio="inbox">
+            <i class="fa fa-envelope-open"></i>
+            Inbox
+        </button>
+        <button class="btn btn-info"
+            btnRadio="outbox">
+            Outbox
+        </button>
+    </div>
+</div>
+<div class="row mt-4" *ngIf="messages && messages?.length == 0">
+    <h2>No messages</h2>
+</div> 
+<div class="row mt-4" *ngIf="messages?.length > 0">
+    <div class="col-12">
+        <table class="table table-hover" style="width:100%">
+            <thead>
+                <tr>
+                    <th style="width: 40%">Message</th>
+                    <th style="width: 20%">From / To</th>
+                    <th style="width: 20%">Sent / Received</th>
+                    <th style="width: 20%"></th>
+                  </tr>
+            </thead>
+            <tbody>
+                <tr class="rowMessage" *ngFor="let message of messages"
+                routerLink='{{messageParams.container == "outbox" 
+                ? "/members/" + message.recipientUsername 
+                : "/members/" + message.senderUsername}}'
+                [queryParams]="{tab: 3}">
+              <td>{{message.content}}</td>
+              <td>
+                  <span>
+                      <img src="{{message.senderPhotoUrl}}" 
+                        alt="{{message.senderUsername}}" 
+                        class="rounded-circle"
+                        style="max-height: 50px;">
+                      <span class="ml-2"><b>{{message.senderUsername | titlecase}}</b></span>
+                  </span>
+              </td>
+              <td>{{message.messageSent | timeago}}</td>
+              <td>
+                  <button class="btn btn-danger" (click)="deleteMessage($event, message.id)">Delete</button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+    </div>
+</div>
+<div class="row mt-3" *ngIf="paginationHeader && messages?.length > 0">
+    <div class="col d-flex justify-content-center">
+        <pagination 
+            [totalItems]="paginationHeader.totalCount" 
+            [itemsPerPage]="paginationHeader.pageSize"
+            [(ngModel)]="paginationHeader.pageNumber"
+            (pageChanged)="pageChanged($event)"></pagination>
+    </div>
+</div>

@@ -3,14 +3,16 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210118154225_MessageEntityAndConfig")]
+    partial class MessageEntityAndConfig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,26 +74,11 @@ namespace API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Content")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DataRead")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("MessageSent")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("RecipientDeleted")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("RecipientId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("RecipientUsername")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("SenderDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("SenderId")
                         .HasColumnType("INTEGER");

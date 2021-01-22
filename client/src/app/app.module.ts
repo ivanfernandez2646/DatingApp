@@ -27,6 +27,7 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
 import { TextInputComponent } from './_forms/text-input/text-input.component';
 import { DatepickerInputComponent } from './_forms/datepicker-input/datepicker-input.component';
 import { NumberInputComponent } from './_forms/number-input/number-input.component';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { NumberInputComponent } from './_forms/number-input/number-input.compone
     PhotoEditorComponent,
     TextInputComponent,
     DatepickerInputComponent,
-    NumberInputComponent
+    NumberInputComponent,
+    MemberMessagesComponent
   ],
   imports: [
     BrowserModule,
@@ -61,8 +63,10 @@ import { NumberInputComponent } from './_forms/number-input/number-input.compone
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
   ],
   bootstrap: [AppComponent]
 })
+
+
 export class AppModule { }

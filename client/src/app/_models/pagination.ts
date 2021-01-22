@@ -7,8 +7,8 @@ export interface PaginationHeader{
     totalCount: number;
 }
 
-export class PaginatedResult{
-    body: Member[];
+export class PaginatedResult<T>{
+    body: T;
     pagination: PaginationHeader;
 }
 
