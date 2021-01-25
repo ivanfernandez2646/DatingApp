@@ -8,6 +8,7 @@ using API.DTOs;
 using API.Entities;
 using API.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,9 +18,15 @@ namespace API.Controllers
     {
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
-        public AccountController(DataContext context, ITokenService tokenService,
-            IMapper mapper) : base(context)
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+
+        public AccountController(ITokenService tokenService,
+            IMapper mapper, UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager)
         {
+            _signInManager = signInManager;
+            _userManager = userManager;
             _mapper = mapper;
             _tokenService = tokenService;
         }
@@ -29,16 +36,11 @@ namespace API.Controllers
         {
             if (await ExistsUser(registerUser.UserName)) return BadRequest("Username has been already used");
 
-            using var hmac = new HMACSHA512();
-
             AppUser appUser = _mapper.Map<AppUser>(registerUser);
-
             appUser.UserName = registerUser.UserName.ToLower();
-            appUser.PasswordHash = await hmac.ComputeHashAsync(new MemoryStream(Encoding.UTF8.GetBytes(registerUser.Password)));
-            appUser.PasswordSalt = hmac.Key;
 
-            _context.Add(appUser);
-            await _context.SaveChangesAsync();
+            var result = await _userManager.CreateAsync(appUser, registerUser.Password);
+            if (!result.Succeeded) return BadRequest("An error occurred creating the user");
 
             return new LoginRegisterUserOutputDTO
             {
@@ -52,21 +54,16 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<LoginRegisterUserOutputDTO>> Login(LoginUserDTO loginUser)
         {
-            AppUser appUser = await _context.Users
+            AppUser appUser = await _userManager.Users
                 .Include(user => user.Photos)
+                .Include(user => user.UserRoles).ThenInclude(ur => ur.Role)
                 .FirstOrDefaultAsync(user => user.UserName == loginUser.UserName.ToLower());
 
             if (appUser == null)
                 return Unauthorized("User doesn't exist!!");
 
-            using var hmac = new HMACSHA512(appUser.PasswordSalt);
-
-            byte[] computedHash = await hmac.ComputeHashAsync(new MemoryStream(Encoding.UTF8.GetBytes(loginUser.Password)));
-
-            for (int i = 0; i < computedHash.Length; i++)
-            {
-                if (computedHash[i] != appUser.PasswordHash[i]) return Unauthorized("Incorrect password!!");
-            }
+            var result = await _signInManager.CheckPasswordSignInAsync(appUser, loginUser.Password, false);
+            if (!result.Succeeded) return Unauthorized("Incorrect password!!");
 
             return new LoginRegisterUserOutputDTO
             {
@@ -80,7 +77,7 @@ namespace API.Controllers
 
         private async Task<bool> ExistsUser(string username)
         {
-            return await _context.Users.AnyAsync(user => user.UserName == username.ToLower());
+            return await _userManager.Users.AnyAsync(user => user.UserName == username.ToLower());
         }
     }
 }

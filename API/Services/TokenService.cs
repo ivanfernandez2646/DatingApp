@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using API.Entities;
@@ -25,9 +26,15 @@ namespace API.Services
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
             };
 
+            foreach (var roleName in user.UserRoles.
+                Select(ur => ur.Role.Name.ToLower()))
+            {
+                claims.Add(new Claim(ClaimTypes.Role, roleName));
+            }
+            
             //Credenciales
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 
