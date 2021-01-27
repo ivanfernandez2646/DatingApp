@@ -1,0 +1,36 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Edit roles for {{userRole.userName | titlecase}}</h4>
+</div>
+<div class="modal-body">
+    <ul>
+        <li>
+            <input class="form-check-input" type="checkbox" 
+                [checked]="this.userRole.role?.includes('admin')"
+                (change)="onChangeRole('admin')">
+            <label class="form-check-label">
+                Admin
+            </label>
+        </li>
+        <li>
+            <input class="form-check-input" type="checkbox"
+                [checked]="this.userRole.role?.includes('moderator')"
+                (change)="onChangeRole('moderator')">
+            <label class="form-check-label">
+                Moderator
+            </label>
+        </li>
+        <li>
+            <input class="form-check-input" type="checkbox"
+                [checked]="this.userRole.role?.includes('member')"
+                (change)="onChangeRole('member')">
+            <label class="form-check-label">
+                Member
+            </label>
+        </li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="this.bsModalRef.hide()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="this.onCloseModal()">Submit</button>
+</div>
+

@@ -31,7 +31,7 @@ namespace API.Controllers
                 .Select(u => new {
                     u.Id,
                     u.UserName,
-                    Roles = u.UserRoles.Select(ur => ur.Role.Name)
+                    Role = u.UserRoles.Select(ur => ur.Role.Name)
                 }).ToListAsync();
 
             return Ok(userRoles);
@@ -39,11 +39,13 @@ namespace API.Controllers
 
         [Authorize(Policy = "RequireAdminRole")]
         [HttpPut("edit-roles/{username}")]
-        public async Task<ActionResult> EditRoles(string username, [FromQuery] string roles){
-            
-            var splittedRoles = roles.Split(",")
+        public async Task<ActionResult> EditRoles(string username, [FromQuery] string roles)
+        {
+            var splittedRoles = roles?.Split(",")
                 .Select(r => r.Trim().ToLower())
                 .ToList();
+
+            if (splittedRoles == null || splittedRoles.Count == 0) return BadRequest("You must need at least a role for the user");
 
             var user = await _userManager.Users
                 .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)

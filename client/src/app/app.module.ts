@@ -28,6 +28,10 @@ import { TextInputComponent } from './_forms/text-input/text-input.component';
 import { DatepickerInputComponent } from './_forms/datepicker-input/datepicker-input.component';
 import { NumberInputComponent } from './_forms/number-input/number-input.component';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+import { AdminUserManagementComponent } from './admin/admin-user-management/admin-user-management.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { AdminEditRolesComponent } from './_modals/admin-edit-roles/admin-edit-roles.component';
+import { ShowAdminPanelDirective } from './_directives/show-admin-panel.directive';
 
 
 @NgModule({
@@ -49,7 +53,11 @@ import { MemberMessagesComponent } from './members/member-messages/member-messag
     TextInputComponent,
     DatepickerInputComponent,
     NumberInputComponent,
-    MemberMessagesComponent
+    MemberMessagesComponent,
+    AdminUserManagementComponent,
+    AdminPanelComponent,
+    AdminEditRolesComponent,
+    ShowAdminPanelDirective,
   ],
   imports: [
     BrowserModule,

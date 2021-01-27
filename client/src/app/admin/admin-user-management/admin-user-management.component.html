@@ -1,0 +1,21 @@
+<ng-container *ngIf="userRoles">
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Active roles</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let userRole of userRoles">
+                    <td>{{userRole.userName}}</td>
+                    <td>{{userRole.role?.join(", ") | titlecase}}</td>
+                    <td>
+                        <button class="btn btn-info" (click)="openModalWithComponent(userRole)">Edit Roles</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</ng-container>

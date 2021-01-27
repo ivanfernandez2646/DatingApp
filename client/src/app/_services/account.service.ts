@@ -40,6 +40,7 @@ export class AccountService {
   }
   
   setCurrentUser(user: User){
+    user.role = JSON.parse(atob(user.token.split(".")[1])).role;
     localStorage.setItem("user", JSON.stringify(user));
     this.currentUserSource.next(user);
   }
