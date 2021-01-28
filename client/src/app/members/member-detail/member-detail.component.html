@@ -4,6 +4,18 @@
             <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}" class="card-img-top">
             <div class="card-body">
                 <div>
+                    <span *ngIf="(presenceService.onlineUsers$ | async).includes(member.userName)"
+                        class="user-online">
+                        <i class="fa fa-user"></i>
+                        <strong class="ml-2 lead">Online</strong>
+                    </span>
+                    <span *ngIf="!(presenceService.onlineUsers$ | async).includes(member.userName)"
+                        class="user-offline">
+                        <i class="fa fa-user-times"></i>
+                        <strong class="ml-2 lead">Offline</strong>
+                    </span>
+                </div>
+                <div class="mt-2">
                     <strong>Location:</strong>
                     <p class="card-text">{{member.city}}, {{member.country}}</p>
                 </div>
@@ -23,7 +35,7 @@
             <div class="card-footer">
                 <div class="container">
                     <div class="row justify-content-around">
-                        <button class="btn btn-secondary col-5">Like</button>
+                        <button class="btn btn-secondary col-5" (click)="addLike(member.userName)">Like</button>
                         <button class="btn btn-primary col-5" (click)="selectTab(3)">Message</button>
                     </div>
                 </div>

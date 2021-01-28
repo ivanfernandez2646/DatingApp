@@ -1,0 +1,13 @@
+.user-online{
+    color: green;
+    animation: user-keyframe 1s linear infinite alternate;
+}
+
+.user-offline{
+    color: red;
+}
+
+@keyframes user-keyframe{
+    0% {opacity: 0.4; transform: scale(1, 1);}
+    100% {opacity: 1; transform: scale(1.2, 1.2);}
+}

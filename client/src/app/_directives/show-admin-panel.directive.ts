@@ -7,9 +7,7 @@ import { User } from '../_models/user';
 export class ShowAdminPanelDirective {
 
   constructor(private templateRef: TemplateRef<any>,
-    private viewContainer: ViewContainerRef) {
-
-  }
+    private viewContainer: ViewContainerRef) { }
 
   @Input() set appShowAdminPanel(userRoles: Partial<User>) {
     if(userRoles.role?.includes("admin") || userRoles.role?.includes("moderator")){

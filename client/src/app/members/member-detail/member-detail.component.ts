@@ -2,11 +2,13 @@ import { AfterContentInit, AfterViewInit, Component, OnInit, ViewChild } from '@
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
+import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { Member } from 'src/app/_models/member';
 import { Message } from 'src/app/_models/message';
 import { MemberService } from 'src/app/_services/member.service';
 import { MessageService } from 'src/app/_services/message.service';
+import { PresenceService } from 'src/app/_services/presence.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -23,8 +25,11 @@ export class MemberDetailComponent implements OnInit {
   messages: Message[];
   firstTime: boolean = true;
 
-  constructor(private memberService: MemberService, private route: ActivatedRoute,
-    private messageService: MessageService) { }
+  constructor(private route: ActivatedRoute,
+    private messageService: MessageService,
+    public presenceService: PresenceService,
+    private memberService: MemberService,
+    private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
@@ -77,6 +82,12 @@ export class MemberDetailComponent implements OnInit {
   loadMessageThread(){
     this.messageService.getMessageThread(this.member.userName).subscribe(res => {
       this.messages = res;
+    })
+  }
+
+  addLike(username: string){
+    this.memberService.addLike(username).subscribe(() => {
+      this.toastr.success("Like added successfully");
     })
   }
 }
