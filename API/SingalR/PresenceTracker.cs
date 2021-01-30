@@ -45,5 +45,16 @@ namespace API.SingalR
 
             await Task.CompletedTask;
         }
+
+        public async Task<IEnumerable<string>> GetConnectionsIdForUser(string username)
+        {
+            var listOfConnectionsId = new List<string>();
+            lock(OnlineUsers){
+                listOfConnectionsId = OnlineUsers[username];
+            }
+
+            await Task.CompletedTask;
+            return listOfConnectionsId;
+        }
     }
 }

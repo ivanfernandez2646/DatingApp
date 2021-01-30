@@ -9,7 +9,7 @@ namespace API.SingalR
     [Authorize]
     public class PresenceHub : Hub
     {
-        private readonly PresenceTracker _presenceTracker;
+        public readonly PresenceTracker _presenceTracker;
         public PresenceHub(PresenceTracker presenceTracker)
         {
             _presenceTracker = presenceTracker;

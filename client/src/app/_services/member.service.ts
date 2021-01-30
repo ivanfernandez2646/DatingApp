@@ -11,7 +11,7 @@ import { AccountService } from './account.service';
 import { User } from '../_models/user';
 import { LikeParams } from '../_models/like-params';
 import { GenericParams } from '../_models/generic-params';
-import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
+import { getPaginatedResult, getPaginationHeaders } from './pagination-helper';
 
 @Injectable({
   providedIn: 'root'

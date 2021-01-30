@@ -65,25 +65,47 @@ namespace API.Data
         {
             var messages = _context.Messages
                 .OrderBy(m => m.MessageSent)
+                .Include(m => m.Sender.Photos)
+                .Include(m => m.Recipient.Photos)
                 .Where(m => (m.SenderUsername == currentUsername && !m.SenderDeleted) && m.RecipientUsername == recipientUsername
                         || (m.RecipientUsername == currentUsername && !m.RecipientDeleted) && m.SenderUsername == recipientUsername)
                 .AsQueryable();
 
             await messages.ForEachAsync(m => {
                 if(m.DataRead == null && m.RecipientUsername == currentUsername)
-                    m.DataRead = DateTime.Now;
+                    m.DataRead = DateTime.UtcNow;
             });
 
             await _context.SaveChangesAsync();
-            var messagesDTOs = messages
-                .ProjectTo<MessageDTO>(_mapper.ConfigurationProvider)
-                .AsEnumerable();
+            var messagesDTOs = _mapper.Map<IEnumerable<MessageDTO>>(messages);
             return messagesDTOs;
         }
 
         public async Task<bool> SaveAllAsync()
         {
             return await _context.SaveChangesAsync() > 0;
+        }
+
+        public void AddGroup(Group group)
+        {
+            _context.Groups.Add(group);
+        }
+
+        public async Task<Connection> GetConnection(string connectionId)
+        {
+            return await _context.Connections.FindAsync(connectionId);
+        }
+
+        public async Task<Group> GetGroup(string groupName)
+        {
+            return await _context.Groups
+                .Include(g => g.Connections)
+                .FirstOrDefaultAsync(g => g.GroupName == groupName);
+        }
+
+        public void RemoveConnection(Connection connection)
+        {
+            _context.Connections.Remove(connection);
         }
     }
 }

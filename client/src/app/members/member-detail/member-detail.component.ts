@@ -1,14 +1,13 @@
-import { AfterContentInit, AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
 import { ToastrService } from 'ngx-toastr';
-import { of } from 'rxjs';
 import { Member } from 'src/app/_models/member';
 import { Message } from 'src/app/_models/message';
 import { MemberService } from 'src/app/_services/member.service';
 import { MessageService } from 'src/app/_services/message.service';
-import { PresenceService } from 'src/app/_services/presence.service';
+import { PresenceHubService } from 'src/app/_services/presence-hub.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -27,9 +26,12 @@ export class MemberDetailComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private messageService: MessageService,
-    public presenceService: PresenceService,
+    public presenceService: PresenceHubService,
     private memberService: MemberService,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    private router: Router) {
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
@@ -80,9 +82,9 @@ export class MemberDetailComponent implements OnInit {
   }
 
   loadMessageThread(){
-    this.messageService.getMessageThread(this.member.userName).subscribe(res => {
+    /*this.messageService.getMessageThread(this.member.userName).subscribe(res => {
       this.messages = res;
-    })
+    })*/
   }
 
   addLike(username: string){

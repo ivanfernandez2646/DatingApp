@@ -5,8 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { RegisterUser } from '../_models/register-user';
 import { User } from '../_models/user';
-import { MemberService } from './member.service';
-import { PresenceService } from './presence.service';
+import { PresenceHubService } from './presence-hub.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,7 @@ export class AccountService {
   currentUser$ = this.currentUserSource.asObservable();
 
   constructor(private httpClient: HttpClient, 
-    private presenceService: PresenceService) { }
+    private presenceService: PresenceHubService) { }
 
   login(model: User){
     return this.httpClient.post(this.url + "account/login", model).pipe(

@@ -6,7 +6,7 @@ import { CreateMessage } from '../_models/create-message';
 import { Message } from '../_models/message';
 import { MessageParams } from '../_models/message-params';
 import { PaginatedResult, PaginationHeader } from '../_models/pagination';
-import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
+import { getPaginatedResult, getPaginationHeaders } from './pagination-helper';
 
 @Injectable({
   providedIn: 'root'
@@ -22,13 +22,14 @@ export class MessageService {
     return getPaginatedResult<Message[]>(this.url + "messages", this.httpClient, params);
   }
 
-  getMessageThread(recipientUsername: string){
-    return this.httpClient.get<Message[]>(this.url + "messages/thread/" + recipientUsername);
-  }
+  // CHANGED TO message-hub.service.ts
+  // getMessageThread(recipientUsername: string){
+  //   return this.httpClient.get<Message[]>(this.url + "messages/thread/" + recipientUsername);
+  // }
 
-  sendMessage(createMessage: CreateMessage){
-    return this.httpClient.post<Message>(this.url + "messages", createMessage);
-  }
+  // sendMessage(createMessage: CreateMessage){
+  //   return this.httpClient.post<Message>(this.url + "messages", createMessage);
+  // }
   
   deleteMessage(messageParams: MessageParams){
     let params = getPaginationHeaders(messageParams);

@@ -82,6 +82,7 @@ namespace API.Data
         {
             return await _context.Users
                 .Include(x => x.Photos)
+                
                 .FirstOrDefaultAsync(x => x.UserName == username);
         }
 
