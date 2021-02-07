@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
-import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -20,11 +19,10 @@ export class MessageHubService {
   message$ = this.messageSource.asObservable();
 
   constructor(private accountService: AccountService) {
-    this.accountService.currentUser$.pipe(take(1))
-      .subscribe((res) => this.user = res);
   }
 
   onCreateHubConnection(recipientUsername: string){
+    this.getUser();
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.url + "message?user=" + recipientUsername, {accessTokenFactory: () => { return this.user.token }})
       .withAutomaticReconnect()
@@ -36,7 +34,6 @@ export class MessageHubService {
 
     this.hubConnection
       .on("GetMessageThread", (res: Message[]) => {
-        console.log(res);
         this.messageSource.next(res);
       });
     
@@ -51,6 +48,16 @@ export class MessageHubService {
   onStopHubConnection(){
     this.hubConnection
       .stop()
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => this.removeUser());
   }
+
+  private getUser = () => {
+    this.accountService.currentUser$.pipe(take(1))
+    .subscribe((res) => this.user = res);
+  };
+
+  private removeUser = () => {
+    this.user = undefined;
+  };
 }

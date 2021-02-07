@@ -18,7 +18,6 @@ export class AdminService {
   editRoles(userRole: Partial<User>){
     let params = new HttpParams();
     params = params.append('roles', userRole.role?.join(","));
-    console.log(params);
     return this.httpClient.put<string[]>(this.url + "admin/edit-roles/" + userRole.userName, {}, {params: params});
   }
 }
