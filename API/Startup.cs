@@ -70,11 +70,15 @@ namespace API
 
             app.UseAuthorization();
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<PresenceHub>("/hub/presence");
                 endpoints.MapHub<MessageHub>("/hub/message");
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }
