@@ -59,7 +59,7 @@
                     style="display: inline-block; margin-bottom: 20px;"></ngx-gallery>
             </tab>
             <tab heading="Messages" (selectTab)="onSelect($event)" #tabMessages="tab">
-                <app-member-messages [messages]="messages" [recipientUsername]="member.userName"
+                <app-member-messages [recipientUsername]="member.userName"
                     *ngIf="tabMessages.active">
                     </app-member-messages>
             </tab>

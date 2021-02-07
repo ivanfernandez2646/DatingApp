@@ -15,10 +15,10 @@ export class MessagesComponent implements OnInit {
   messageParams: MessageParams;
 
   constructor(private messageService: MessageService) {
-    this.messageParams = new MessageParams();
   }
 
   ngOnInit(): void {
+    this.messageParams = new MessageParams();
     this.loadMessages();
   }
 

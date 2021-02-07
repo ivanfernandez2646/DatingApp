@@ -16,6 +16,7 @@ namespace API.Data
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+
         public LikesRepository(DataContext context, IMapper mapper)
         {
             _mapper = mapper;

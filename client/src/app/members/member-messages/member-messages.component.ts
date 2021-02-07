@@ -25,7 +25,6 @@ export class MemberMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   createMessage: CreateMessage;
   messages: Message[];
   currentMessagesLengthContainer: number = undefined;
-  firstTime = true;
 
   constructor(public messageHubService: MessageHubService) {
     this.createMessage = new CreateMessage();
@@ -33,11 +32,11 @@ export class MemberMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit(): void {
     this.createMessage.recipientUsername = this.recipientUsername;
+    this.messageHubService.onCreateHubConnection(this.recipientUsername);
     this.messageHubService.message$.subscribe(res => {
       this.messages = res;
       this.createMessage.content = "";
     });
-    this.messageHubService.onCreateHubConnection(this.recipientUsername);
   }
 
   ngAfterViewInit(): void {

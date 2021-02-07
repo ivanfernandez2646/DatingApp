@@ -90,12 +90,7 @@ namespace API.Data
         {
             return await _context.Users.ToListAsync();
         }
-
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _context.SaveChangesAsync() > 0;
-        }
-
+        
         public void Update(AppUser appUser)
         {
             _context.Entry<AppUser>(appUser).State = EntityState.Modified;

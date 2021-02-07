@@ -50,7 +50,9 @@ namespace API.SingalR
         {
             var listOfConnectionsId = new List<string>();
             lock(OnlineUsers){
-                listOfConnectionsId = OnlineUsers[username];
+                if(OnlineUsers.ContainsKey(username)){
+                    listOfConnectionsId = OnlineUsers[username];
+                }
             }
 
             await Task.CompletedTask;

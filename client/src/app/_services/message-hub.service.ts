@@ -19,8 +19,7 @@ export class MessageHubService {
   private messageSource = new BehaviorSubject<Message[]>([]);
   message$ = this.messageSource.asObservable();
 
-  constructor(private accountService: AccountService,
-    private toastr: ToastrService) {
+  constructor(private accountService: AccountService) {
     this.accountService.currentUser$.pipe(take(1))
       .subscribe((res) => this.user = res);
   }
@@ -37,6 +36,7 @@ export class MessageHubService {
 
     this.hubConnection
       .on("GetMessageThread", (res: Message[]) => {
+        console.log(res);
         this.messageSource.next(res);
       });
     

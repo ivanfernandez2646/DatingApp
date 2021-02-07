@@ -81,11 +81,6 @@ namespace API.Data
             return messagesDTOs;
         }
 
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _context.SaveChangesAsync() > 0;
-        }
-
         public void AddGroup(Group group)
         {
             _context.Groups.Add(group);
