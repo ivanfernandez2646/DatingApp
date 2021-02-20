@@ -65,7 +65,7 @@ namespace API.Controllers
         [HttpPost("add-photo")]
         public async Task<ActionResult<PhotoDTO>> InsertPhoto(IFormFile img)
         {
-            var username = User.Claims.FirstOrDefault()?.Value;
+            var username = User.GetUsername();
             var userToUpdate = await _unitOfWork.UserRepository.GetUserByUsernameAsync(username);
 
             if (userToUpdate != null)
@@ -96,7 +96,7 @@ namespace API.Controllers
         [HttpPut("set-main-photo/{photoId}")]
         public async Task<ActionResult<PhotoDTO>> SetMainPhoto(int photoId)
         {
-            var username = User.Claims.FirstOrDefault()?.Value;
+            var username = User.GetUsername();
             var userToUpdate = await _unitOfWork.UserRepository.GetUserByUsernameAsync(username);
 
             if (userToUpdate != null)
@@ -120,7 +120,7 @@ namespace API.Controllers
         [HttpDelete("delete-photo/{photoId}")]
         public async Task<ActionResult> DeletePhoto(int photoId)
         {
-            var username = User.Claims.FirstOrDefault()?.Value;
+            var username = User.GetUsername();
             var userToUpdate = await _unitOfWork.UserRepository.GetUserByUsernameAsync(username);
 
             if (userToUpdate != null)
