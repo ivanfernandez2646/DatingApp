@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { CreateMessage } from '../_models/create-message';
 import { Message } from '../_models/message';
 import { MessageParams } from '../_models/message-params';
 import { PaginatedResult, PaginationHeader } from '../_models/pagination';

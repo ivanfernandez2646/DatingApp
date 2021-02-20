@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { Message } from '../_models/message';
 import { User } from '../_models/user';
 import { AccountService } from './account.service';
+import { BusyService } from './busy.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +19,12 @@ export class MessageHubService {
   private messageSource = new BehaviorSubject<Message[]>([]);
   message$ = this.messageSource.asObservable();
 
-  constructor(private accountService: AccountService) {
+  constructor(private accountService: AccountService,
+    private busyService: BusyService) {
   }
 
   onCreateHubConnection(recipientUsername: string){
+    this.busyService.showLoadingAnimation();
     this.getUser();
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.url + "message?user=" + recipientUsername, {accessTokenFactory: () => { return this.user.token }})
@@ -30,7 +33,8 @@ export class MessageHubService {
 
     this.hubConnection
       .start()
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => this.busyService.hideLoadingAnimation());
 
     this.hubConnection
       .on("GetMessageThread", (res: Message[]) => {
@@ -49,7 +53,10 @@ export class MessageHubService {
     this.hubConnection
       .stop()
       .catch(err => console.log(err))
-      .finally(() => this.removeUser());
+      .finally(() => {
+        this.messageSource.next([]);
+        this.removeUser();
+      });
   }
 
   private getUser = () => {

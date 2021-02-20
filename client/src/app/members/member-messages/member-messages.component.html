@@ -42,7 +42,7 @@
                     required
                     #inputMessage>
                 <div class="input-group-append">
-                    <button class="btn btn-secondary" type="submit" [disabled]="!sendMessageForm.valid">
+                    <button class="btn btn-secondary" type="submit" [disabled]="!sendMessageForm.valid || isSendingMessage">
                         <i class="fa fa-paper-plane"></i>
                     </button>
                 </div>

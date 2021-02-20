@@ -25,6 +25,7 @@ export class MemberMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   createMessage: CreateMessage;
   messages: Message[];
   currentMessagesLengthContainer: number = undefined;
+  isSendingMessage: boolean;
 
   constructor(public messageHubService: MessageHubService) {
     this.createMessage = new CreateMessage();
@@ -64,8 +65,9 @@ export class MemberMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     // }, error => {
     //   this.toastr.error(error);
     // })
+    this.isSendingMessage = true;
     this.messageHubService.hubConnection.invoke("OnSendMessage", 
-      this.createMessage.content);
+      this.createMessage.content).finally(() => this.isSendingMessage = false);
   }
 
   scrollDownMessages(){
