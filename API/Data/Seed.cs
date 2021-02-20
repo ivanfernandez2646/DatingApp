@@ -27,7 +27,10 @@ namespace API.Data
                 new AppRole() {Name = "member"}
             };
 
-            roles.ForEach(r => roleManager.CreateAsync(r));
+            foreach (var role in roles)
+            {
+                await roleManager.CreateAsync(role);
+            };
             
             foreach(AppUser user in users){
                 user.UserName = user.UserName.ToLower();
