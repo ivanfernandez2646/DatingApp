@@ -42,6 +42,8 @@ namespace API.Controllers
             var result = await _userManager.CreateAsync(appUser, registerUser.Password);
             if (!result.Succeeded) return BadRequest("An error occurred creating the user");
 
+            await _userManager.AddToRoleAsync(appUser, "member");
+
             return new LoginRegisterUserOutputDTO
             {
                 UserName = appUser.UserName,
