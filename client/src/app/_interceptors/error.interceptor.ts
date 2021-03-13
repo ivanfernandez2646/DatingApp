@@ -26,6 +26,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 for(const key in error.error.errors){
                   validationErrors.push(error.error.errors[key]);
                 }
+                this.toastr.error(...validationErrors.flat());
                 throw validationErrors.flat();
               }else{
                 this.toastr.error(error.error);
@@ -48,7 +49,6 @@ export class ErrorInterceptor implements HttpInterceptor {
               break;
           }        
 
-        console.log(error);
         return throwError(error);
       })
     );
