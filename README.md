@@ -1,7 +1,10 @@
 # DatingApp
 Course of Angular and .NET webapi with C#
 
-WIP...
+https://datingappifc.herokuapp.com/
+
+User: lisa
+Password: 123456
 
 <img src="https://i.ibb.co/6rhFYvz/Capture.jpg" alt="Capture" border="0">
 
